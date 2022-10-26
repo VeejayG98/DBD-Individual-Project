@@ -89,7 +89,7 @@ def checkoutBook():
     if available == 0:
         return "Book is already checked out!"
 
-    mycursor.execute(f"SELECT COUNT(*) FROM BOOK_LOANS WHERE CARD_ID = '{card_id}'")
+    mycursor.execute(f"SELECT COUNT(*) FROM BOOK_LOANS WHERE CARD_ID = '{card_id}' AND DATE_IN IS NULL")
     no_of_books = mycursor.fetchall()[0]['COUNT(*)']
     print(no_of_books, type(no_of_books))
 
@@ -108,5 +108,8 @@ def checkoutBook():
 
     return 'OK'
 
+# @app.route('/books/checkin', methods = ['POST'])
+# def checkinBook():
+#     pass
 
 app.run()
