@@ -37,13 +37,15 @@ def searchBooks():
         WHERE AUTHORS.NAME LIKE '%{search}%' OR BOOKS.TITLE LIKE '%{search}%' OR BOOKS.ISBN13 LIKE '%{search}%'")
     
     myresult = mycursor.fetchall()
-    myresult = pd.DataFrame(myresult)
-    agg_functions = {'NAME': lambda x: ", ".join(x),
-                 'TITLE' : 'first',
-                 'AVAILABLE' : 'first'}
+    if myresult:
+        myresult = pd.DataFrame(myresult)
+        agg_functions = {'NAME': lambda x: ", ".join(x),
+                    'TITLE' : 'first',
+                    'AVAILABLE' : 'first'}
 
-    myresult = myresult.groupby('ISBN13', as_index= False).agg(agg_functions)
-    return jsonify(myresult.to_dict('records'))
+        myresult = myresult.groupby('ISBN13', as_index= False).agg(agg_functions)
+        myresult = myresult.to_dict('records')
+    return jsonify(myresult)
     
 
 app.run()
