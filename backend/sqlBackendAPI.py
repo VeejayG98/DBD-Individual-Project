@@ -5,6 +5,7 @@ import mysql.connector
 from flask import Flask, jsonify, request
 import pandas as pd
 
+
 def connectSQLDB():
     mydb = mysql.connector.connect(
         host="localhost",
@@ -16,6 +17,7 @@ def connectSQLDB():
 
 # mycursor = mydb.cursor(dictionary=True)
 
+
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
@@ -25,7 +27,7 @@ def getBooks():
 
     mydb = connectSQLDB()
     mycursor = mydb.cursor(dictionary=True)
-    
+
     mycursor.execute("SELECT AUTHORS.NAME, BOOKS.TITLE, BOOKS.ISBN13 FROM \
     AUTHORS INNER JOIN BOOK_AUTHORS ON AUTHORS.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID \
     INNER JOIN BOOKS ON BOOK_AUTHORS.ISBN13 = BOOKS.ISBN13")
@@ -70,16 +72,16 @@ def searchBooks():
 
 @app.route('/books/checkout', methods=['POST'])
 def checkoutBook():
-    
+
     if 'isbn13' not in request.json:
         return "Error: No ISBN provided. Please provide an ISBN."
     if 'card_id' not in request.json:
         return "Error: No CARD_ID provided. Please provide an CARD_ID."
-    
+
     isbn13 = request.json['isbn13']
     card_id = request.json['card_id']
     date_out = datetime.now().date()
-    due_date = date_out + timedelta(days = 7)
+    due_date = date_out + timedelta(days=7)
 
     mydb = connectSQLDB()
     mycursor = mydb.cursor(dictionary=True)
@@ -89,7 +91,8 @@ def checkoutBook():
     if available == 0:
         return "Book is already checked out!"
 
-    mycursor.execute(f"SELECT COUNT(*) FROM BOOK_LOANS WHERE CARD_ID = '{card_id}' AND DATE_IN IS NULL")
+    mycursor.execute(
+        f"SELECT COUNT(*) FROM BOOK_LOANS WHERE CARD_ID = '{card_id}' AND DATE_IN IS NULL")
     no_of_books = mycursor.fetchall()[0]['COUNT(*)']
     print(no_of_books, type(no_of_books))
 
@@ -99,7 +102,7 @@ def checkoutBook():
     mycursor.execute("INSERT INTO BOOK_LOANS (ISBN13, CARD_ID, DATE_OUT, DUE_DATE) VALUES (%s, %s, %s, %s)",
                      (isbn13, card_id, date_out, due_date))
     mydb.commit()
-    
+
     mycursor.execute(f"UPDATE BOOKS SET AVAILABLE = 0 WHERE ISBN13 = {isbn13}")
     mydb.commit()
 
@@ -108,8 +111,30 @@ def checkoutBook():
 
     return 'OK'
 
-# @app.route('/books/checkin', methods = ['POST'])
-# def checkinBook():
-#     pass
+
+@app.route('/books/checkin', methods=['POST'])
+def checkinBook():
+    if 'loan_id' not in request.json:
+        return "Error: No LOAN_ID provided. Please provide an LOAN_ID."
+
+    loan_id = request.json['loan_id']
+    date_in = datetime.now().date()
+
+    mydb = connectSQLDB()
+    mycursor = mydb.cursor(dictionary=True)
+
+    mycursor.execute(
+        f"UPDATE BOOK_LOANS SET DATE_IN = '{date_in}' WHERE LOAN_ID = '{loan_id}'")
+    mydb.commit()
+    mycursor.execute(f"UPDATE BOOKS SET AVAILABLE = 1 WHERE \
+                        ISBN13 = (SELECT BOOKS.ISBN13 FROM \
+                        BOOK_LOANS WHERE LOAN_ID = {loan_id})")
+    mydb.commit()
+
+    mycursor.close()
+    mydb.close()
+
+    return 'OK'
+
 
 app.run()
