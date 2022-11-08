@@ -28,7 +28,7 @@ def getBooks():
     mydb = connectSQLDB()
     mycursor = mydb.cursor(dictionary=True)
 
-    mycursor.execute("SELECT AUTHORS.NAME, BOOKS.TITLE, BOOKS.ISBN13 FROM \
+    mycursor.execute("SELECT AUTHORS.NAME, BOOKS.TITLE, BOOKS.ISBN13, BOOKS.AVAILABLE FROM \
     AUTHORS INNER JOIN BOOK_AUTHORS ON AUTHORS.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID \
     INNER JOIN BOOKS ON BOOK_AUTHORS.ISBN13 = BOOKS.ISBN13")
 
@@ -136,5 +136,45 @@ def checkinBook():
 
     return 'OK'
 
+@app.route('/borrowers/addnew', methods = ['POST'])
+def addNewBorrowers():
+    parameters = ['first_name', 'last_name', 'ssn', 'address', 'city', 'state']
+    for parameter in parameters:
+        if parameter not in request.json:
+            return "Error: Please fill in the name, ssn and address fields!"
+
+    first_name = request.json['first_name']
+    last_name = request.json['last_name']
+    ssn = request.json['ssn']
+    address = request.json['address']
+    city = request.json['city']
+    state = request.json['state']
+
+    phone = request.json.get("phone", None)
+    email = request.json.get("email", None)
+
+    mydb = connectSQLDB()
+    mycursor = mydb.cursor(dictionary = True)
+    
+    mycursor.execute("SELECT CARD_ID FROM BORROWERS \
+                ORDER BY CARD_ID DESC LIMIT 1")
+    latestID = mycursor.fetchall()[0]['CARD_ID']
+    newID = int(latestID[2:]) + 1
+    newID = f"ID{newID:06}"
+
+    try:
+        mycursor.execute("INSERT INTO BORROWERS (CARD_ID, SSN, FIRST_NAME, LAST_NAME, EMAIL, ADDRESS, CITY, STATE, PHONE) \
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (newID, ssn, first_name, last_name, email, address, city, state, phone)
+        )
+        mydb.commit()
+
+    except Exception as e:
+        return str(e)
+
+    mycursor.close()
+    mydb.close()
+
+    return "Test OK"
 
 app.run()
