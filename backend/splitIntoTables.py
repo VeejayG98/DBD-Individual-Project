@@ -1,6 +1,7 @@
 import pandas as pd
 
-entireLibrary = pd.read_csv('Entire_DB_LibraryV2.csv', error_bad_lines= False)
+entireLibrary = pd.read_csv('booksLibrary.csv', error_bad_lines= False, delimiter='\t')
+entireLibrary.columns = ['ISBN10', 'ISBN13', 'Title', 'Author', 'Cover', 'Publisher', 'Pages']
 entireLibrary['Author'] = entireLibrary['Author'].map(
     lambda x: x.split(',') if pd.isnull(x) == False else [x])
 entireLibrary = entireLibrary.explode('Author')
