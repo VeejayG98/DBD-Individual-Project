@@ -104,13 +104,13 @@ def checkoutBook():
     card_ids = set([i['CARD_ID'] for i in mycursor.fetchall()])
 
     if card_id not in card_ids:
-        return "", "400 Card Number not present in the system!"
+        return {"error": "Card Number not present in the system!"}, 400
 
 
     mycursor.execute(f"SELECT AVAILABLE FROM BOOKS WHERE ISBN13 = '{isbn13}'")
     available = mycursor.fetchall()[0]['AVAILABLE']
     if available == 0:
-        return "", "400 Book is already checked out!"
+        return {"error": "Book is already checked out!"}, 400
 
     mycursor.execute(
         f"SELECT COUNT(*) FROM BOOK_LOANS WHERE CARD_ID = '{card_id}' AND DATE_IN IS NULL")
@@ -118,7 +118,8 @@ def checkoutBook():
     print(no_of_books, type(no_of_books))
 
     if no_of_books == 3:
-        return "", "400 User has borrowed more than 3 books!"
+        return {"error": "User has borrowed more than 3 books!"}, 400
+
 
     mycursor.execute("INSERT INTO BOOK_LOANS (ISBN13, CARD_ID, DATE_OUT, DUE_DATE) VALUES (%s, %s, %s, %s)",
                      (isbn13, card_id, date_out, due_date))
