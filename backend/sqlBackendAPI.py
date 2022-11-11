@@ -199,4 +199,72 @@ def addNewBorrowers():
 
     return "Test OK"
 
+@app.route('/fines/all')
+def showFines():
+    todays_date = datetime.now().date()
+    mydb = connectSQLDB()
+    mycursor = mydb.cursor(dictionary=True)
+
+    #Update existing fines in the Fines table.
+    mycursor.execute("SELECT BOOK_LOANS.LOAN_ID, BOOK_LOANS.DUE_DATE, BOOK_LOANS.DATE_IN FROM \
+    BOOK_LOANS JOIN FINES ON BOOK_LOANS.LOAN_ID = FINES.LOAN_ID \
+        WHERE PAID = 0")
+    
+    myresults = mycursor.fetchall()
+
+    updated_values = []
+    for row in myresults:
+        if row['DATE_IN'] is None:
+            fine = (todays_date - row['DUE_DATE']).days * 0.25
+        else:
+            fine = (row['DATE_IN'] - row['DUE_DATE']).days * 0.25
+        updated_values.append([fine, row['LOAN_ID']])
+
+    mycursor.executemany("UPDATE FINES SET FINE_AMT = %s WHERE LOAN_ID = %s", updated_values)
+    mydb.commit()
+
+    #Add new fines into the Fines table.
+    mycursor.execute("SELECT BOOK_LOANS.LOAN_ID, BOOK_LOANS.DUE_DATE, BOOK_LOANS.DATE_IN FROM \
+    BOOK_LOANS LEFT JOIN FINES ON BOOK_LOANS.LOAN_ID = FINES.LOAN_ID \
+    WHERE FINES.LOAN_ID IS NULL AND BOOK_LOANS.DUE_DATE < CURDATE()")
+
+    myresults = mycursor.fetchall()
+
+    new_values = []
+    for row in myresults:
+        if row['DATE_IN'] is None:
+            fine = (todays_date - row['DUE_DATE']).days * 0.25
+        else:
+            fine = (row['DATE_IN'] - row['DUE_DATE']).days * 0.25
+        new_values.append([row['LOAN_ID'], fine])
+
+    mycursor.executemany("INSERT INTO FINES(LOAN_ID, FINE_AMT) VALUES(%s, %s)", new_values)
+    mydb.commit()
+
+    mycursor.execute("SELECT * FROM FINES")
+    myresults = mycursor.fetchall()
+
+    mycursor.close()
+    mydb.close()
+
+    return jsonify(myresults)
+
+@app.route('/fines/payment', methods = ["POST"])
+def makePayment():
+    if 'loan_id' not in request.json:
+        return "Loan_ID not provided!", 400
+    loan_id = request.json['loan_id']
+    
+    mydb = connectSQLDB()
+    mycursor = mydb.cursor(dictionary= True)
+    
+    mycursor.execute(f"UPDATE FINES SET PAID = 1 WHERE LOAN_ID = {loan_id}")
+    mydb.commit()
+
+    mycursor.close()
+    mydb.close()
+
+    return "Payment completed", 200
+
+
 app.run()
