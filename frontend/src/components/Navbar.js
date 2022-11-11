@@ -16,6 +16,7 @@ function NavBar() {
           <Button color='inherit'>Check in Book</Button>
           <Button color='inherit'>Pay Fines</Button>
           <Button color='inherit'>View Fines</Button>
+          <Button color='inherit'>Add New Borrower</Button>
         </Stack>
       </Toolbar>
     </AppBar>
