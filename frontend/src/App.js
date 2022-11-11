@@ -1,33 +1,13 @@
-import logo from "./logo.svg";
-import "./App.css";
-import { Table } from "@mui/material";
-import { TableBody } from "@mui/material";
-import { TableCell } from "@mui/material";
-import { TableContainer } from "@mui/material";
-import { TableHead } from "@mui/material";
-import { TableRow } from "@mui/material";
-import { Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import { Modal } from "@mui/material";
 import { Box } from "@mui/material";
 import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
-// import InputBase from "@mui/material";
+import BasicTable from "./components/BasicTable";
+import NavBar from "./components/Navbar";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
-// import Sea
 function App() {
   const [books, setBooks] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -69,17 +49,9 @@ function App() {
         card_id: cardID,
       }),
     })
-      // .then((res) => res.json())
-      // .then((res) => {
-      //   if("error" in res){
-      //     setErrorMessage(res['error']);
-      //     console.log(errorMessage);
-      //   }
-      // })
       .then((res) => {
         console.log(res);
         if (res.status !== 200)
-          // throw new Error(res.statusText);
           res.json().then((data) => setErrorMessage(data['error']));
       })
       .catch((error) => {
@@ -87,28 +59,6 @@ function App() {
         console.log(error.message);
         setErrorMessage(error.message);
       });
-
-    // .then((res) => {
-    //   let error = false;
-    //   if(!res.ok){
-    //     // errorMessage = res;
-    //     error = true;
-    //   }
-    //   res = res.json()
-    //   console.log(res);
-    //   return res, error;
-    // })
-    // .then((res, error) => {
-    //   if(error === true){
-    //     console.log(res);
-    //     setErrorMessage(res);
-    //   }
-    // })
-    // .then((data) => setErrorMessage(data));
-    // .catch((error) => {
-    //   setErrorMessage(error);
-    //   console.log(error);
-    // })
   }
 
   useEffect(() => {
@@ -134,6 +84,7 @@ function App() {
 
   return (
     <div>
+      <NavBar/>
       <TextField
         id="filled-basic"
         label="Search Books"
@@ -148,13 +99,10 @@ function App() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Enter your Card ID to borrow the book!
           </Typography>
-          {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography> */}
           <Box>
             <TextField
               required
@@ -177,44 +125,6 @@ function App() {
   );
 }
 
-const BasicTable = ({ books, handleOpen }) => {
-  return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableCell align="right">ISBN</TableCell>
-          <TableCell align="right">Book Title</TableCell>
-          <TableCell align="right">Book Author</TableCell>
-          <TableCell align="right">Book Availability</TableCell>
-        </TableHead>
-        <TableBody>
-          {books.map((book) => (
-            <TableRow
-              key={book.ISBN13}
-              sx={{ "&:last-child td, &:last-chlild th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {book.ISBN13}
-              </TableCell>
-              {/* <TableCell align='right'>{book.ISBN13}</TableCell> */}
-              <TableCell align="right">{book.TITLE}</TableCell>
-              <TableCell align="right">{book.NAME}</TableCell>
-              <TableCell align="right">{book.AVAILABLE ? "Yes":"No"}</TableCell>
-              <TableCell aligh="right">
-                <Button
-                  variant="contained"
-                  id={book.ISBN13}
-                  onClick={handleOpen}
-                >
-                  Check Out
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-};
+
 
 export default App;
