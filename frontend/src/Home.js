@@ -35,7 +35,7 @@ function Home() {
     fetch("http://127.0.0.1:5000/books/all", {
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
+        "Accept": "application/json",
       },
     })
       .then((res) => {
