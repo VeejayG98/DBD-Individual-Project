@@ -266,5 +266,46 @@ def makePayment():
 
     return "Payment completed", 200
 
+@app.route('/loans/all')
+def getLoans():
+
+    mydb = connectSQLDB()
+    mycursor = mydb.cursor(dictionary=True)
+
+    mycursor.execute(f"SELECT BOOK_LOANS.LOAN_ID, BOOK_LOANS.CARD_ID, BORROWERS.FIRST_NAME, \
+        BORROWERS.LAST_NAME, BOOK_LOANS.ISBN13, BOOK_LOANS.DATE_OUT, BOOK_LOANS.DUE_DATE \
+        FROM BOOK_LOANS JOIN BORROWERS ON BOOK_LOANS.CARD_ID = BORROWERS.CARD_ID \
+        WHERE BOOK_LOANS.DATE_IN IS NULL")
+    
+    myresults = mycursor.fetchall()
+    mycursor.close()
+    mydb.close()
+
+    # for i in range(len(myresults)):
+    #     myresults[i]['DATE_OUT'] = str(myresults[i]['DATE_OUT'])
+    # print(myresults)
+    return jsonify(myresults)
+
+@app.route('/loans/search', methods=["POST"])
+def searchLoans():
+    if 'search' not in request.json:
+        return "Error: No search field is provided", 400
+    search = request.json['search']
+
+    mydb = connectSQLDB()
+    mycursor = mydb.cursor(dictionary=True)
+
+    mycursor.execute(f"SELECT BOOK_LOANS.LOAN_ID, BOOK_LOANS.CARD_ID, BORROWERS.FIRST_NAME, \
+        BORROWERS.LAST_NAME, BOOK_LOANS.ISBN13, BOOK_LOANS.DATE_OUT, BOOK_LOANS.DUE_DATE \
+        FROM BOOK_LOANS JOIN BORROWERS ON BOOK_LOANS.CARD_ID = BORROWERS.CARD_ID \
+        WHERE (BOOK_LOANS.ISBN13 LIKE '%{search}%' OR BOOK_LOANS.CARD_ID LIKE '%{search}%' \
+        OR BORROWERS.FIRST_NAME LIKE '%{search}%' OR BORROWERS.LAST_NAME LIKE '%{search}%') AND\
+        BOOK_LOANS.DATE_IN IS NULL")
+    
+    myresults = mycursor.fetchall()
+    
+    mycursor.close()
+    mydb.close()
+    return jsonify(myresults)
 
 app.run()
