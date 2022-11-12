@@ -19,7 +19,7 @@ function NavBar() {
         <Stack direction='row' spacing={2} >
           <Button color='inherit' onClick={() => navigate('/checkin')}>Check in Book</Button>
           <Button color='inherit'>Pay Fines</Button>
-          <Button color='inherit'>View Fines</Button>
+          <Button color='inherit' onClick={() => navigate('/view-fines')}>View Fines</Button>
           <Button color='inherit'>Add New Borrower</Button>
         </Stack>
       </Toolbar>
