@@ -30,12 +30,11 @@ function Home() {
       });
   }
 
-
   useEffect(() => {
     fetch("http://127.0.0.1:5000/books/all", {
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json",
+        Accept: "application/json",
       },
     })
       .then((res) => {
@@ -54,19 +53,23 @@ function Home() {
 
   return (
     <div>
-      <NavBar/>
+      <NavBar />
       <TextField
         id="filled-basic"
         label="Search Books"
         variant="filled"
         onChange={handleSearch}
       />
-      <BasicTable books={books} handleOpen={handleOpen} />
-      <CheckoutModal modalOpen={modalOpen} handleClose={handleClose} ISBN13={ISBN13} />
+      <div style={{ margin: "20px" }}>
+        <BasicTable books={books} handleOpen={handleOpen} />
+        <CheckoutModal
+          modalOpen={modalOpen}
+          handleClose={handleClose}
+          ISBN13={ISBN13}
+        />
+      </div>
     </div>
   );
 }
-
-
 
 export default Home;

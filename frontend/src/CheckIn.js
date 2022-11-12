@@ -17,13 +17,15 @@ function CheckIn() {
   }, []);
 
   useEffect(() => {
-    console.log(loans)
-  }, [loans])
+    console.log(loans);
+  }, [loans]);
 
   return (
     <div>
       <NavBar />
-      <LoansTable loans={loans} />
+      <div style={{ margin: "20px" }}>
+        <LoansTable loans={loans} />
+      </div>
     </div>
   );
 }
