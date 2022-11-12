@@ -30,7 +30,7 @@ const ViewFinesTable = ({ fines }) => {
                   {fine.LOAN_ID}
                 </TableCell>
                 <TableCell align="right">{fine.FINE_AMT}</TableCell>
-                <TableCell align="right">{fine.PAID}</TableCell>
+                <TableCell align="right">{fine.PAID? "Paid" : "Not Paid"}</TableCell>
               </TableRow>
             ))}
           </TableBody>
