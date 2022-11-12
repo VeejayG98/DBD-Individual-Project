@@ -33,14 +33,16 @@ const LoansTable = ({ loans }) => {
       <TableContainer component={Paper} sx={{ maxHeight: 450 }}>
         <Table sx={{ minWidth: 650 }} aria-label="a dense table">
           <TableHead>
-            <TableCell align="right">Loan ID</TableCell>
-            <TableCell align="right">Card ID</TableCell>
-            <TableCell align="right">First Name</TableCell>
-            <TableCell align="right">Last Name</TableCell>
-            <TableCell align="right">Book ID</TableCell>
-            <TableCell align="right">Date Out</TableCell>
-            <TableCell align="right">Due Date</TableCell>
-            <TableCell align="right"></TableCell>
+            <TableRow>
+              <TableCell align="right">Loan ID</TableCell>
+              <TableCell align="right">Card ID</TableCell>
+              <TableCell align="right">First Name</TableCell>
+              <TableCell align="right">Last Name</TableCell>
+              <TableCell align="right">Book ID</TableCell>
+              <TableCell align="right">Date Out</TableCell>
+              <TableCell align="right">Due Date</TableCell>
+              <TableCell align="right"></TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
             {loans.map((loan) => (
