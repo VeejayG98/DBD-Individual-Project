@@ -9,6 +9,7 @@ function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [ISBN13, setISBN] = useState("");
   const [search, setSearch] = useState("");
+  const [openSnackBar, setOpenSnackBar] = useState(false);
 
   const handleOpen = (event) => {
     setModalOpen(true);
@@ -34,12 +35,12 @@ function Home() {
   };
 
   function handleSearch(event) {
-    setSearch(event.target.value)
+    setSearch(event.target.value);
   }
 
   useEffect(() => {
     getBookSearch();
-  }, [search])
+  }, [search]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/books/all", {
@@ -72,11 +73,17 @@ function Home() {
         onChange={handleSearch}
       />
       <div style={{ margin: "20px" }}>
-        <BasicTable books={books} handleOpen={handleOpen} />
+        <BasicTable
+          books={books}
+          handleOpen={handleOpen}
+          openSnackBar={openSnackBar}
+          setOpenSnackBar={setOpenSnackBar}
+        />
         <CheckoutModal
           modalOpen={modalOpen}
           handleClose={handleClose}
           getBookSearch={getBookSearch}
+          setOpenSnackBar={setOpenSnackBar}
           ISBN13={ISBN13}
         />
       </div>

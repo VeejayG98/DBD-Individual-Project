@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 import { TextField } from "@mui/material";
 import { useState } from "react";
 
-function CheckoutModal({ modalOpen, handleClose, getBookSearch, ISBN13 }) {
+function CheckoutModal({ modalOpen, handleClose, getBookSearch, setOpenSnackBar, ISBN13 }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [cardID, setCardID] = useState("");
 
@@ -43,6 +43,7 @@ function CheckoutModal({ modalOpen, handleClose, getBookSearch, ISBN13 }) {
       setErrorMessage(errorJson["error"]);
     } else {
       getBookSearch();
+      setOpenSnackBar(true);
     }
   };
 
