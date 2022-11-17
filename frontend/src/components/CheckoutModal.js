@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 import { TextField } from "@mui/material";
 import { useState } from "react";
 
-function CheckoutModal({ modalOpen, handleClose, ISBN13 }) {
+function CheckoutModal({ modalOpen, handleClose, getBookSearch, ISBN13 }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [cardID, setCardID] = useState("");
 
@@ -26,8 +26,8 @@ function CheckoutModal({ modalOpen, handleClose, ISBN13 }) {
     setErrorMessage("");
   };
 
-  const handleCheckout = () => {
-    fetch(`http://127.0.0.1:5000/books/checkout`, {
+  const handleCheckout = async () => {
+    const response = await fetch(`http://127.0.0.1:5000/books/checkout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,16 +37,13 @@ function CheckoutModal({ modalOpen, handleClose, ISBN13 }) {
         isbn13: ISBN13,
         card_id: cardID,
       }),
-    })
-      .then((res) => {
-        console.log(res);
-        if (res.status !== 200)
-          res.json().then((data) => setErrorMessage(data["error"]));
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setErrorMessage(error.message);
-      });
+    });
+    if (response.status !== 200) {
+      const errorJson = await response.json();
+      setErrorMessage(errorJson["error"]);
+    } else {
+      getBookSearch();
+    }
   };
 
   return (

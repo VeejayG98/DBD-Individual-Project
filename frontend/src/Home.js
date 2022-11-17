@@ -8,6 +8,7 @@ function Home() {
   const [books, setBooks] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [ISBN13, setISBN] = useState("");
+  const [search, setSearch] = useState("");
 
   const handleOpen = (event) => {
     setModalOpen(true);
@@ -15,10 +16,12 @@ function Home() {
   };
   const handleClose = () => {
     setModalOpen(false);
+    setISBN("");
   };
 
-  function handleSearch(event) {
-    fetch(`http://127.0.0.1:5000/books/search?search=${event.target.value}`, {
+  const getBookSearch = () => {
+    console.log("Searching...");
+    fetch(`http://127.0.0.1:5000/books/search?search=${search}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -28,7 +31,15 @@ function Home() {
       .then((data) => {
         setBooks(data.splice(0, 50));
       });
+  };
+
+  function handleSearch(event) {
+    setSearch(event.target.value)
   }
+
+  useEffect(() => {
+    getBookSearch();
+  }, [search])
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/books/all", {
@@ -65,6 +76,7 @@ function Home() {
         <CheckoutModal
           modalOpen={modalOpen}
           handleClose={handleClose}
+          getBookSearch={getBookSearch}
           ISBN13={ISBN13}
         />
       </div>
