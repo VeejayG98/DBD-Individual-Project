@@ -32,7 +32,7 @@ const LoansTable = ({ loans, getLoansSearch }) => {
 
   return (
     <div>
-      <TableContainer component={Paper} sx={{ maxHeight: 450 }}>
+      <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="a dense table">
           <TableHead>
             <TableRow>

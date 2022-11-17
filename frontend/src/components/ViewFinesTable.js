@@ -11,7 +11,7 @@ import { Paper } from "@mui/material";
 const ViewFinesTable = ({ fines }) => {
   return (
     <div>
-      <TableContainer component={Paper} sx={{ maxHeight: 450 }}>
+      <TableContainer component={Paper} >
         <Table sx={{ minWidth: 650 }} aria-label="a dense table">
           <TableHead>
             <TableRow>
