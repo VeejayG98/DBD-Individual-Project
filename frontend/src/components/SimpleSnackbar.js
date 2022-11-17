@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import { Snackbar } from "@mui/material";
 
-function SimpleSnackbar({setOpen, open}) {
+function SimpleSnackbar({setOpen, open, message}) {
 
   const action = (
     <div>
@@ -16,7 +16,7 @@ function SimpleSnackbar({setOpen, open}) {
       open={open}
       autoHideDuration={6000}
       onClose={() => setOpen(false)}
-      message="Check In Completed"
+      message={message}
       action={action}
     ></Snackbar>
   );

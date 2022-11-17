@@ -5,6 +5,7 @@ import NavBar from "./components/Navbar";
 
 function CheckIn() {
   const [loans, setLoans] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/loans/all", {
@@ -21,11 +22,11 @@ function CheckIn() {
     console.log(loans);
   }, [loans]);
 
-  function handleSearch(event) {
+  const getLoansSearch = () => {
     fetch(`http://127.0.0.1:5000/loans/search`, {
       method: "POST",
       body: JSON.stringify({
-        search: event.target.value
+        search: search,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,15 @@ function CheckIn() {
       .then((data) => {
         setLoans(data);
       });
+  };
+
+  function handleSearch(event) {
+    setSearch(event.target.value);
   }
+
+  useEffect(() => {
+    getLoansSearch();
+  }, [search]);
 
   return (
     <div>
@@ -48,7 +57,7 @@ function CheckIn() {
         onChange={handleSearch}
       />
       <div style={{ margin: "20px" }}>
-        <LoansTable loans={loans} />
+        <LoansTable loans={loans} getLoansSearch={getLoansSearch} />
       </div>
     </div>
   );

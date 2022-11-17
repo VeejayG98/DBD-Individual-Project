@@ -9,12 +9,13 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import SimpleSnackbar from "./SimpleSnackbar";
 
-const LoansTable = ({ loans }) => {
+const LoansTable = ({ loans, getLoansSearch }) => {
   const [openSnackBar, setOpenSnackBar] = useState(false);
+  const checkinMessage = "Checkin Completed";
 
-  const handleCheckIn = (event) => {
+  const handleCheckIn = async (event) => {
     console.log(event.target.id);
-    fetch("http://127.0.0.1:5000/books/checkin", {
+    await fetch("http://127.0.0.1:5000/books/checkin", {
       method: "POST",
       body: JSON.stringify({
         loan_id: event.target.id,
@@ -25,6 +26,7 @@ const LoansTable = ({ loans }) => {
       },
     });
 
+    getLoansSearch();
     setOpenSnackBar(true);
   };
 
@@ -73,7 +75,11 @@ const LoansTable = ({ loans }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <SimpleSnackbar setOpen={setOpenSnackBar} open={openSnackBar} />
+      <SimpleSnackbar
+        setOpen={setOpenSnackBar}
+        open={openSnackBar}
+        message={checkinMessage}
+      />
     </div>
   );
 };
