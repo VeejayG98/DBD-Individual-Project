@@ -25,7 +25,12 @@ const BorrowerSignup = () => {
 
     return (
       <div>
-        <Grid container alignContent="center" justifyContent="center" padding={2}>
+        <Grid
+          container
+          alignContent="center"
+          justifyContent="center"
+          padding={2}
+        >
           <Grid item>
             <Typography variant="h5">Borrower Signup</Typography>
           </Grid>
@@ -46,6 +51,52 @@ const BorrowerSignup = () => {
                 variant="outlined"
                 required
                 onChange={(e) => setLastName(e.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="SSN"
+                variant="outlined"
+                required
+                onChange={(e) => setSSN(e.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="Address"
+                variant="outlined"
+                required
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="City"
+                variant="outlined"
+                required
+                onChange={(e) => setCity(e.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="State"
+                variant="outlined"
+                required
+                onChange={(e) => setGeoState(e.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="Phone Number"
+                variant="outlined"
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="Email"
+                variant="outlined"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Grid>
           </Grid>
