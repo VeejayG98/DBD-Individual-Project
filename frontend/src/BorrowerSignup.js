@@ -22,6 +22,32 @@ const BorrowerSignup = () => {
     const [geoState, setGeoState] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const response = await fetch("http://127.0.0.1:5000/borrowers/addnew", {
+        method: "POST",
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          ssn: ssn,
+          address: address,
+          city: city,
+          state: geoState,
+          phone: phone,
+          email: email,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if(response.status !== 200){
+        const error = await response.text();
+        setErrorMessage(error);
+      }
+    };
 
     return (
       <div>
@@ -35,7 +61,7 @@ const BorrowerSignup = () => {
             <Typography variant="h5">Borrower Signup</Typography>
           </Grid>
         </Grid>
-        <form>
+        <form onSubmit={handleSubmit}>
           <Grid container direction="column" alignContent="center" spacing={2}>
             <Grid item>
               <TextField
@@ -99,6 +125,16 @@ const BorrowerSignup = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Grid>
+            <Grid item>
+              <Button type="submit" variant="contained">
+                Submit
+              </Button>
+            </Grid>
+            {errorMessage.length !== 0 ?
+            <Grid item>
+              <p style={{ color: "red" }}>{errorMessage}</p>
+            </Grid>:<></>
+            }
           </Grid>
         </form>
       </div>
