@@ -38,8 +38,8 @@ def getBooks():
     myresult = mycursor.fetchall()
     myresult = pd.DataFrame(myresult)
     agg_functions = {'NAME': lambda x: ", ".join(x),
-                    'TITLE': 'first',
-                    'AVAILABLE': 'first'}
+                     'TITLE': 'first',
+                     'AVAILABLE': 'first'}
 
     myresult = myresult.groupby(
         'ISBN13', as_index=False).agg(agg_functions)
@@ -95,7 +95,6 @@ def checkoutBook():
     date_out = datetime.now().date()
     due_date = date_out + timedelta(days=7)
 
-
     mydb = connectSQLDB()
     mycursor = mydb.cursor(dictionary=True)
 
@@ -105,7 +104,6 @@ def checkoutBook():
 
     if card_id not in card_ids:
         return {"error": "Card Number not present in the system!"}, 400
-
 
     mycursor.execute(f"SELECT AVAILABLE FROM BOOKS WHERE ISBN13 = '{isbn13}'")
     available = mycursor.fetchall()[0]['AVAILABLE']
@@ -119,7 +117,6 @@ def checkoutBook():
 
     if no_of_books == 3:
         return {"error": "User has borrowed more than 3 books!"}, 400
-
 
     mycursor.execute("INSERT INTO BOOK_LOANS (ISBN13, CARD_ID, DATE_OUT, DUE_DATE) VALUES (%s, %s, %s, %s)",
                      (isbn13, card_id, date_out, due_date))
@@ -158,7 +155,8 @@ def checkinBook():
 
     return 'OK'
 
-@app.route('/borrowers/addnew', methods = ['POST'])
+
+@app.route('/borrowers/addnew', methods=['POST'])
 def addNewBorrowers():
     parameters = ['first_name', 'last_name', 'ssn', 'address', 'city', 'state']
     for parameter in parameters:
@@ -176,8 +174,8 @@ def addNewBorrowers():
     email = request.json.get("email", None)
 
     mydb = connectSQLDB()
-    mycursor = mydb.cursor(dictionary = True)
-    
+    mycursor = mydb.cursor(dictionary=True)
+
     mycursor.execute("SELECT CARD_ID FROM BORROWERS \
                 ORDER BY CARD_ID DESC LIMIT 1")
     latestID = mycursor.fetchall()[0]['CARD_ID']
@@ -187,17 +185,19 @@ def addNewBorrowers():
     try:
         mycursor.execute("INSERT INTO BORROWERS (CARD_ID, SSN, FIRST_NAME, LAST_NAME, EMAIL, ADDRESS, CITY, STATE, PHONE) \
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                (newID, ssn, first_name, last_name, email, address, city, state, phone)
-        )
+                         (newID, ssn, first_name, last_name,
+                          email, address, city, state, phone)
+                         )
         mydb.commit()
 
     except Exception as e:
-        return str(e)
+        return "Duplicate SSN exists for this record.", 400
 
     mycursor.close()
     mydb.close()
 
     return "Test OK"
+
 
 @app.route('/fines/all')
 def showFines():
@@ -205,11 +205,11 @@ def showFines():
     mydb = connectSQLDB()
     mycursor = mydb.cursor(dictionary=True)
 
-    #Update existing fines in the Fines table.
+    # Update existing fines in the Fines table.
     mycursor.execute("SELECT BOOK_LOANS.LOAN_ID, BOOK_LOANS.DUE_DATE, BOOK_LOANS.DATE_IN FROM \
     BOOK_LOANS JOIN FINES ON BOOK_LOANS.LOAN_ID = FINES.LOAN_ID \
         WHERE PAID = 0")
-    
+
     myresults = mycursor.fetchall()
 
     updated_values = []
@@ -220,13 +220,15 @@ def showFines():
             fine = (row['DATE_IN'] - row['DUE_DATE']).days * 0.25
         updated_values.append([fine, row['LOAN_ID']])
 
-    mycursor.executemany("UPDATE FINES SET FINE_AMT = %s WHERE LOAN_ID = %s", updated_values)
+    mycursor.executemany(
+        "UPDATE FINES SET FINE_AMT = %s WHERE LOAN_ID = %s", updated_values)
     mydb.commit()
 
-    #Add new fines into the Fines table.
+    # Add new fines into the Fines table.
     mycursor.execute("SELECT BOOK_LOANS.LOAN_ID, BOOK_LOANS.DUE_DATE, BOOK_LOANS.DATE_IN FROM \
     BOOK_LOANS LEFT JOIN FINES ON BOOK_LOANS.LOAN_ID = FINES.LOAN_ID \
-    WHERE FINES.LOAN_ID IS NULL AND BOOK_LOANS.DUE_DATE < CURDATE()")
+    WHERE FINES.LOAN_ID IS NULL AND ((BOOK_LOANS.DUE_DATE < CURDATE() AND BOOK_LOANS.DATE_IN IS NULL)\
+    OR(BOOK_LOANS.DATE_IN > BOOK_LOANS.DUE_DATE))")
 
     myresults = mycursor.fetchall()
 
@@ -238,7 +240,8 @@ def showFines():
             fine = (row['DATE_IN'] - row['DUE_DATE']).days * 0.25
         new_values.append([row['LOAN_ID'], fine])
 
-    mycursor.executemany("INSERT INTO FINES(LOAN_ID, FINE_AMT) VALUES(%s, %s)", new_values)
+    mycursor.executemany(
+        "INSERT INTO FINES(LOAN_ID, FINE_AMT) VALUES(%s, %s)", new_values)
     mydb.commit()
 
     mycursor.execute("SELECT * FROM FINES")
@@ -249,15 +252,35 @@ def showFines():
 
     return jsonify(myresults)
 
-@app.route('/fines/payment', methods = ["POST"])
+
+@app.route('/fines/users', methods=["GET"])
+def showFinesByUser():
+    mydb = connectSQLDB()
+    mycursor = mydb.cursor(dictionary=True)
+
+    mycursor.execute("SELECT BORROWERS.CARD_ID, BORROWERS.FIRST_NAME, BORROWERS.LAST_NAME, \
+    SUM(FINES.FINE_AMT) AS FINES_DUE \
+    FROM FINES JOIN BOOK_LOANS ON FINES.LOAN_ID = BOOK_LOANS.LOAN_ID \
+    JOIN BORROWERS ON BOOK_LOANS.CARD_ID = BORROWERS.CARD_ID \
+    WHERE PAID = 0 \
+    GROUP BY BORROWERS.CARD_ID")
+    
+    myresults = mycursor.fetchall()
+    mycursor.close()
+    mydb.close()
+
+    return jsonify(myresults)
+
+
+@app.route('/fines/payment', methods=["POST"])
 def makePayment():
     if 'loan_id' not in request.json:
         return "Loan_ID not provided!", 400
     loan_id = request.json['loan_id']
-    
+
     mydb = connectSQLDB()
-    mycursor = mydb.cursor(dictionary= True)
-    
+    mycursor = mydb.cursor(dictionary=True)
+
     mycursor.execute(f"UPDATE FINES SET PAID = 1 WHERE LOAN_ID = {loan_id}")
     mydb.commit()
 
@@ -265,6 +288,7 @@ def makePayment():
     mydb.close()
 
     return "Payment completed", 200
+
 
 @app.route('/loans/all')
 def getLoans():
@@ -276,7 +300,7 @@ def getLoans():
         BORROWERS.LAST_NAME, BOOK_LOANS.ISBN13, BOOK_LOANS.DATE_OUT, BOOK_LOANS.DUE_DATE \
         FROM BOOK_LOANS JOIN BORROWERS ON BOOK_LOANS.CARD_ID = BORROWERS.CARD_ID \
         WHERE BOOK_LOANS.DATE_IN IS NULL")
-    
+
     myresults = mycursor.fetchall()
     mycursor.close()
     mydb.close()
@@ -285,6 +309,7 @@ def getLoans():
     #     myresults[i]['DATE_OUT'] = str(myresults[i]['DATE_OUT'])
     # print(myresults)
     return jsonify(myresults)
+
 
 @app.route('/loans/search', methods=["POST"])
 def searchLoans():
@@ -301,11 +326,12 @@ def searchLoans():
         WHERE (BOOK_LOANS.ISBN13 LIKE '%{search}%' OR BOOK_LOANS.CARD_ID LIKE '%{search}%' \
         OR BORROWERS.FIRST_NAME LIKE '%{search}%' OR BORROWERS.LAST_NAME LIKE '%{search}%') AND\
         BOOK_LOANS.DATE_IN IS NULL")
-    
+
     myresults = mycursor.fetchall()
-    
+
     mycursor.close()
     mydb.close()
     return jsonify(myresults)
+
 
 app.run()
