@@ -274,14 +274,22 @@ def showFinesByUser():
 
 @app.route('/fines/payment', methods=["POST"])
 def makePayment():
-    if 'loan_id' not in request.json:
-        return "Loan_ID not provided!", 400
-    loan_id = request.json['loan_id']
+    if 'card_id' not in request.json:
+        return "Card_ID not provided!", 400
+    card_id = request.json['card_id']
 
     mydb = connectSQLDB()
     mycursor = mydb.cursor(dictionary=True)
 
-    mycursor.execute(f"UPDATE FINES SET PAID = 1 WHERE LOAN_ID = {loan_id}")
+    mycursor.execute(f"SELECT FINES.LOAN_ID FROM \
+    FINES JOIN BOOK_LOANS ON FINES.LOAN_ID = BOOK_LOANS.LOAN_ID \
+    WHERE CARD_ID = '{card_id}'")
+    loan_ids = mycursor.fetchall()
+    loan_ids = [[id['LOAN_ID']] for id in loan_ids]
+
+    # print(loan_ids)
+    # return jsonify(loan_ids)
+    mycursor.executemany("UPDATE FINES SET FINES.PAID = 1 WHERE FINES.LOAN_ID = %s", loan_ids)
     mydb.commit()
 
     mycursor.close()
