@@ -18,7 +18,7 @@ function NavBar() {
         </Typography>
         <Stack direction='row' spacing={2} >
           <Button color='inherit' onClick={() => navigate('/checkin')}>Check in Book</Button>
-          <Button color='inherit'>Pay Fines</Button>
+          <Button color='inherit' onClick={() => navigate('/payment/fines')}>Pay Fines</Button>
           <Button color='inherit' onClick={() => navigate('/view-fines')}>View Fines</Button>
           <Button color='inherit' onClick={() => navigate('/borrowers/signup')}>Add New Borrower</Button>
         </Stack>
