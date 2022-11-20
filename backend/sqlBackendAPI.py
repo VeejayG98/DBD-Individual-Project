@@ -264,7 +264,7 @@ def showFinesByUser():
     JOIN BORROWERS ON BOOK_LOANS.CARD_ID = BORROWERS.CARD_ID \
     WHERE PAID = 0 \
     GROUP BY BORROWERS.CARD_ID")
-    
+
     myresults = mycursor.fetchall()
     mycursor.close()
     mydb.close()
@@ -281,15 +281,22 @@ def makePayment():
     mydb = connectSQLDB()
     mycursor = mydb.cursor(dictionary=True)
 
+    mycursor.execute(f"SELECT COUNT(*) FROM \
+    FINES JOIN BOOK_LOANS ON FINES.LOAN_ID = BOOK_LOANS.LOAN_ID \
+    WHERE CARD_ID = '{card_id}' AND DATE_IN IS NULL")
+    myresult = mycursor.fetchall()[0]['COUNT(*)']
+
+    if myresult != 0:
+        return "Return all books by the user to complete the payment", 400
+
     mycursor.execute(f"SELECT FINES.LOAN_ID FROM \
     FINES JOIN BOOK_LOANS ON FINES.LOAN_ID = BOOK_LOANS.LOAN_ID \
     WHERE CARD_ID = '{card_id}'")
-    loan_ids = mycursor.fetchall()
-    loan_ids = [[id['LOAN_ID']] for id in loan_ids]
+    myresult = mycursor.fetchall()
+    loan_ids = [[id['LOAN_ID']] for id in myresult]
 
-    # print(loan_ids)
-    # return jsonify(loan_ids)
-    mycursor.executemany("UPDATE FINES SET FINES.PAID = 1 WHERE FINES.LOAN_ID = %s", loan_ids)
+    mycursor.executemany(
+        "UPDATE FINES SET FINES.PAID = 1 WHERE FINES.LOAN_ID = %s", loan_ids)
     mydb.commit()
 
     mycursor.close()
