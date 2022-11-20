@@ -6,8 +6,29 @@ import { TableHead } from "@mui/material";
 import { TableRow } from "@mui/material";
 import { Paper } from "@mui/material";
 import { Button } from "@mui/material";
+import { useState } from "react";
+import SimpleSnackbar from "./SimpleSnackbar";
 
-const PayFinesTable = ({ userFines }) => {
+const PayFinesTable = ({ userFines, getUserFines }) => {
+
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const paymentMessage = "Payment Successful";
+
+  const handlePayFines = async(event) => {
+    await fetch("http://127.0.0.1:5000/fines/payment", {
+      method: "POST",
+      body: JSON.stringify({
+        card_id: event.target.id
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
+    })
+    getUserFines();
+    setOpenSnackBar(true);
+  }
+
   return (
     <div>
       <TableContainer component={Paper}>
@@ -35,7 +56,7 @@ const PayFinesTable = ({ userFines }) => {
                   <Button
                     variant="contained"
                     id={user.CARD_ID}
-                    // onClick={handleCheckIn}
+                    onClick={handlePayFines}
                   >
                     Pay Fines
                   </Button>
@@ -45,11 +66,11 @@ const PayFinesTable = ({ userFines }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      {/* <SimpleSnackbar
+      <SimpleSnackbar
             setOpen={setOpenSnackBar}
             open={openSnackBar}
-            message={checkinMessage}
-          /> */}
+            message={paymentMessage}
+          />
     </div>
   );
 };
