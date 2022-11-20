@@ -12,10 +12,10 @@ import SimpleSnackbar from "./SimpleSnackbar";
 const PayFinesTable = ({ userFines, getUserFines }) => {
 
   const [openSnackBar, setOpenSnackBar] = useState(false);
-  const paymentMessage = "Payment Successful";
+  const [paymentMessage, setPaymentMessage] = useState("");
 
   const handlePayFines = async(event) => {
-    await fetch("http://127.0.0.1:5000/fines/payment", {
+    const response = await fetch("http://127.0.0.1:5000/fines/payment", {
       method: "POST",
       body: JSON.stringify({
         card_id: event.target.id
@@ -25,6 +25,13 @@ const PayFinesTable = ({ userFines, getUserFines }) => {
         Accept: "application/json"
       }
     })
+    if(response.status !== 200){
+      const error = await response.text()
+      setPaymentMessage(error);
+    }
+    else{
+      setPaymentMessage("Payment Successful");
+    }
     getUserFines();
     setOpenSnackBar(true);
   }
