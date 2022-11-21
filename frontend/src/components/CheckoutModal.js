@@ -5,8 +5,14 @@ import { Button } from "@mui/material";
 import { TextField } from "@mui/material";
 import { useState } from "react";
 
-function CheckoutModal({ modalOpen, handleClose, getBookSearch, setOpenSnackBar, setCheckoutMessage, ISBN13 }) {
-  const [errorMessage, setErrorMessage] = useState("");
+function CheckoutModal({
+  modalOpen,
+  handleClose,
+  getBookSearch,
+  setOpenSnackBar,
+  setCheckoutMessage,
+  ISBN13,
+}) {
   const [cardID, setCardID] = useState("");
 
   const style = {
@@ -23,7 +29,6 @@ function CheckoutModal({ modalOpen, handleClose, getBookSearch, setOpenSnackBar,
 
   const handleSubmit = (event) => {
     setCardID(event.target.value);
-    // setErrorMessage("");
   };
 
   const handleCheckout = async () => {
@@ -70,11 +75,6 @@ function CheckoutModal({ modalOpen, handleClose, getBookSearch, setOpenSnackBar,
             <Button variant="contained" onClick={handleCheckout}>
               Check Out
             </Button>
-            {errorMessage.length !== 0 ? (
-              <p style={{ color: "red" }}>{errorMessage}</p>
-            ) : (
-              <></>
-            )}
           </Box>
         </Box>
       </Modal>
