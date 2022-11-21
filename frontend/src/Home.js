@@ -10,6 +10,7 @@ function Home() {
   const [ISBN13, setISBN] = useState("");
   const [search, setSearch] = useState("");
   const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [checkoutMessage, setCheckoutMessage] = useState("");
 
   const handleOpen = (event) => {
     setModalOpen(true);
@@ -78,12 +79,14 @@ function Home() {
           handleOpen={handleOpen}
           openSnackBar={openSnackBar}
           setOpenSnackBar={setOpenSnackBar}
+          checkoutMessage={checkoutMessage}
         />
         <CheckoutModal
           modalOpen={modalOpen}
           handleClose={handleClose}
           getBookSearch={getBookSearch}
           setOpenSnackBar={setOpenSnackBar}
+          setCheckoutMessage={setCheckoutMessage}
           ISBN13={ISBN13}
         />
       </div>

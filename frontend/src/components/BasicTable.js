@@ -9,8 +9,8 @@ import { Paper } from "@mui/material";
 import { Button } from "@mui/material";
 import SimpleSnackbar from "./SimpleSnackbar";
 
-const BasicTable = ({ books, handleOpen, openSnackBar, setOpenSnackBar }) => {
-  const checkoutMessage = "Checkout completed";
+const BasicTable = ({ books, handleOpen, openSnackBar, setOpenSnackBar, checkoutMessage }) => {
+  // const checkoutMessage = "Checkout completed";
 
   return (
     <div>
