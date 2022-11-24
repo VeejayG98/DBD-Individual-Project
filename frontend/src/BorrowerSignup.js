@@ -1,3 +1,4 @@
+import { Card, CardContent, Grid } from "@mui/material";
 import { useState } from "react";
 import BorrowerForm from "./components/BorrowerForm";
 import NavBar from "./components/Navbar";
@@ -10,10 +11,18 @@ const BorrowerSignup = () => {
   return (
     <div>
       <NavBar />
-      <BorrowerForm
-        setOpenSnackBar={setOpenSnackBar}
-        setSignupMessage={setSignupMessage}
-      />
+      <Grid container alignContent="center" justifyContent="center" padding={2}>
+        <Grid item>
+          <Card sx={{ minWidth: 450 }}>
+            <CardContent>
+              <BorrowerForm
+                setOpenSnackBar={setOpenSnackBar}
+                setSignupMessage={setSignupMessage}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
       <SimpleSnackbar
         setOpen={setOpenSnackBar}
         open={openSnackBar}
