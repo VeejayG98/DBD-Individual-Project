@@ -146,7 +146,7 @@ def checkinBook():
         f"UPDATE BOOK_LOANS SET DATE_IN = '{date_in}' WHERE LOAN_ID = '{loan_id}'")
     mydb.commit()
     mycursor.execute(f"UPDATE BOOKS SET AVAILABLE = 1 WHERE \
-                        ISBN13 = (SELECT BOOKS.ISBN13 FROM \
+                        ISBN13 = (SELECT BOOK_LOANS.ISBN13 FROM \
                         BOOK_LOANS WHERE LOAN_ID = {loan_id})")
     mydb.commit()
 
