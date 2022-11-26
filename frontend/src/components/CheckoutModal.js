@@ -22,7 +22,7 @@ function CheckoutModal({
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "2px solid #000",
+    // border: "2px solid #000",
     boxShadow: 24,
     p: 4,
   };
@@ -66,15 +66,19 @@ function CheckoutModal({
             Enter your Card ID to borrow the book!
           </Typography>
           <Box>
-            <TextField
-              required
-              id="outlined-required"
-              label="Card ID"
-              onChange={handleSubmit}
-            />
-            <Button variant="contained" onClick={handleCheckout}>
+            <div style={{margin: 5}}>
+              <TextField
+                required
+                id="outlined-required"
+                label="Card ID"
+                onChange={handleSubmit}
+                style={{margin: 2}}
+              />
+              <Button variant="contained" onClick={handleCheckout} style={{margin: 5}}>
               Check Out
             </Button>
+            </div>
+            
           </Box>
         </Box>
       </Modal>

@@ -8,9 +8,11 @@ import { TableRow } from "@mui/material";
 import { Paper } from "@mui/material";
 import { Button } from "@mui/material";
 import SimpleSnackbar from "./SimpleSnackbar";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import { green, red } from "@mui/material/colors";
 
 const BasicTable = ({ books, handleOpen, openSnackBar, setOpenSnackBar, checkoutMessage }) => {
-  // const checkoutMessage = "Checkout completed";
 
   return (
     <div>
@@ -18,11 +20,11 @@ const BasicTable = ({ books, handleOpen, openSnackBar, setOpenSnackBar, checkout
         <Table sx={{ minWidth: 650 }} aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell align="right">ISBN</TableCell>
-              <TableCell align="right">Book Title</TableCell>
-              <TableCell align="right">Book Author</TableCell>
-              <TableCell align="right">Book Availability</TableCell>
-              <TableCell align="right"></TableCell>
+              <TableCell align="center">ISBN</TableCell>
+              <TableCell align="center">Book Title</TableCell>
+              <TableCell align="center">Book Author</TableCell>
+              <TableCell align="center">Book Availability</TableCell>
+              <TableCell align="center"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -31,15 +33,15 @@ const BasicTable = ({ books, handleOpen, openSnackBar, setOpenSnackBar, checkout
                 key={book.ISBN13}
                 sx={{ "&:last-child td, &:last-chlild th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" align="center">
                   {book.ISBN13}
                 </TableCell>
-                <TableCell align="right">{book.TITLE}</TableCell>
-                <TableCell align="right">{book.NAME}</TableCell>
-                <TableCell align="right">
-                  {book.AVAILABLE ? "Yes" : "No"}
+                <TableCell align="center" sx={{width: 750}}>{book.TITLE}</TableCell>
+                <TableCell align="center">{book.NAME}</TableCell>
+                <TableCell align="center">
+                  {book.AVAILABLE ? <CheckRoundedIcon sx={{color: green[600]}} /> : <CloseRoundedIcon sx={{color: red[600]}} />}
                 </TableCell>
-                <TableCell aligh="right">
+                <TableCell aligh="center">
                   <Button
                     variant="contained"
                     id={book.ISBN13}

@@ -36,14 +36,14 @@ const LoansTable = ({ loans, getLoansSearch }) => {
         <Table sx={{ minWidth: 650 }} aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell align="right">Loan ID</TableCell>
-              <TableCell align="right">Card ID</TableCell>
-              <TableCell align="right">First Name</TableCell>
-              <TableCell align="right">Last Name</TableCell>
-              <TableCell align="right">Book ID</TableCell>
-              <TableCell align="right">Date Out</TableCell>
-              <TableCell align="right">Due Date</TableCell>
-              <TableCell align="right"></TableCell>
+              <TableCell align="center">Loan ID</TableCell>
+              <TableCell align="center">Card ID</TableCell>
+              <TableCell align="center">First Name</TableCell>
+              <TableCell align="center">Last Name</TableCell>
+              <TableCell align="center">Book ID</TableCell>
+              <TableCell align="center">Date Out</TableCell>
+              <TableCell align="center">Due Date</TableCell>
+              <TableCell align="center"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -52,16 +52,16 @@ const LoansTable = ({ loans, getLoansSearch }) => {
                 key={loan.LOAN_ID}
                 sx={{ "&:last-child td, &:last-chlild th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" align="center">
                   {loan.LOAN_ID}
                 </TableCell>
-                <TableCell align="right">{loan.CARD_ID}</TableCell>
-                <TableCell align="right">{loan.FIRST_NAME}</TableCell>
-                <TableCell align="right">{loan.LAST_NAME}</TableCell>
-                <TableCell align="right">{loan.ISBN13}</TableCell>
-                <TableCell align="right">{loan.DATE_OUT}</TableCell>
-                <TableCell align="right">{loan.DUE_DATE}</TableCell>
-                <TableCell aligh="right">
+                <TableCell align="center">{loan.CARD_ID}</TableCell>
+                <TableCell align="center">{loan.FIRST_NAME}</TableCell>
+                <TableCell align="center">{loan.LAST_NAME}</TableCell>
+                <TableCell align="center">{loan.ISBN13}</TableCell>
+                <TableCell align="center">{loan.DATE_OUT}</TableCell>
+                <TableCell align="center">{loan.DUE_DATE}</TableCell>
+                <TableCell aligh="center">
                   <Button
                     variant="contained"
                     id={loan.LOAN_ID}
