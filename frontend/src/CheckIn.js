@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import LoansTable from "./components/LoansTable";
-import { TextField } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import NavBar from "./components/Navbar";
+import SearchBar from "./components/SearchBar";
 
 function CheckIn() {
   const [loans, setLoans] = useState([]);
@@ -50,12 +51,11 @@ function CheckIn() {
   return (
     <div>
       <NavBar />
-      <TextField
-        id="filled-basic"
-        label="Search Books Loans"
-        variant="filled"
-        onChange={handleSearch}
-      />
+      <Grid container alignContent="center" justifyContent="center" margin={2}>
+        <Grid item>
+          <SearchBar placeholder="Search Book Loans" onChange={handleSearch}/>
+        </Grid>
+      </Grid>
       <div style={{ margin: "20px" }}>
         <LoansTable loans={loans} getLoansSearch={getLoansSearch} />
       </div>

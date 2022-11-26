@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { TextField } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import BasicTable from "./components/BasicTable";
 import NavBar from "./components/Navbar";
 import CheckoutModal from "./components/CheckoutModal";
+import SearchBar from "./components/SearchBar";
 
 function Home() {
   const [books, setBooks] = useState([]);
@@ -67,12 +68,11 @@ function Home() {
   return (
     <div>
       <NavBar />
-      <TextField
-        id="filled-basic"
-        label="Search Books"
-        variant="filled"
-        onChange={handleSearch}
-      />
+      <Grid container alignContent="center" justifyContent="center" margin={2}>
+        <Grid item>
+          <SearchBar placeholder="Search for Books" onChange={handleSearch}/>
+        </Grid>
+      </Grid>
       <div style={{ margin: "20px" }}>
         <BasicTable
           books={books}
