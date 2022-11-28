@@ -36,7 +36,7 @@ const BasicTable = ({ books, handleOpen, openSnackBar, setOpenSnackBar, checkout
                 <TableCell component="th" scope="row" align="center">
                   {book.ISBN13}
                 </TableCell>
-                <TableCell align="center" sx={{width: 750}}>{book.TITLE}</TableCell>
+                <TableCell align="center" sx={{minWidth: 750, maxWidth: 750}}>{book.TITLE}</TableCell>
                 <TableCell align="center">{book.NAME}</TableCell>
                 <TableCell align="center">
                   {book.AVAILABLE ? <CheckRoundedIcon sx={{color: green[600]}} /> : <CloseRoundedIcon sx={{color: red[600]}} />}
@@ -46,6 +46,7 @@ const BasicTable = ({ books, handleOpen, openSnackBar, setOpenSnackBar, checkout
                     variant="contained"
                     id={book.ISBN13}
                     onClick={handleOpen}
+                    style={{width: 119, height: 36.5}}
                   >
                     Check Out
                   </Button>
