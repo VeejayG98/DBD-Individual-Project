@@ -16,7 +16,6 @@ def connectSQLDB():
     )
     return mydb
 
-# mycursor = mydb.cursor(dictionary=True)
 
 
 app = Flask(__name__)
@@ -99,7 +98,6 @@ def checkoutBook():
     mycursor = mydb.cursor(dictionary=True)
 
     mycursor.execute("SELECT CARD_ID FROM BORROWERS")
-    # print(mycursor.fetchall())
     card_ids = set([i['CARD_ID'] for i in mycursor.fetchall()])
 
     if card_id not in card_ids:
@@ -320,9 +318,6 @@ def getLoans():
     mycursor.close()
     mydb.close()
 
-    # for i in range(len(myresults)):
-    #     myresults[i]['DATE_OUT'] = str(myresults[i]['DATE_OUT'])
-    # print(myresults)
     return jsonify(myresults)
 
 
