@@ -116,7 +116,7 @@ def checkoutBook():
     print(no_of_books, type(no_of_books))
 
     if no_of_books == 3:
-        return {"error": "User has borrowed more than 3 books!"}, 400
+        return {"error": "User is trying to borrow more than 3 books!"}, 400
 
     mycursor.execute("INSERT INTO BOOK_LOANS (ISBN13, CARD_ID, DATE_OUT, DUE_DATE) VALUES (%s, %s, %s, %s)",
                      (isbn13, card_id, date_out, due_date))
