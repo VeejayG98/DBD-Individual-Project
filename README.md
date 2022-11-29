@@ -8,9 +8,25 @@ To execute the full-stack application the following steps are to be followed:
 
 ### **Backend Code Compilation**
 
-To execute the backend API code, please run the sqlBackendAPI.py using the following command on the terminal:
+To get the backend API code running, we need to do the following:
 
-            python sqlBackendAPI.py
+1. Install the required packages to run the code using the following command:
+
+        pip3 install -r requirements.txt
+
+                        or
+
+        pip install -r requirements.txt
+
+2. Then we need to install the mysql-connector for python. Run the following command:
+
+        pip install mysql-connector-python
+
+
+3. To execute the backend API code, please run the sqlBackendAPI.py using the following command on the terminal:
+
+
+        python sqlBackendAPI.py
 
 ### **Frontend Code Compilation**
 
