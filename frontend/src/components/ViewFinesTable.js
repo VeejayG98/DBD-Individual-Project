@@ -16,8 +16,8 @@ const ViewFinesTable = ({ fines }) => {
           <TableHead>
             <TableRow>
               <TableCell align="center">Loan ID</TableCell>
-              <TableCell align="right">Fine Amount</TableCell>
-              <TableCell align="right">Status</TableCell>
+              <TableCell align="center">Fine Amount</TableCell>
+              <TableCell align="center">Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -29,8 +29,8 @@ const ViewFinesTable = ({ fines }) => {
                 <TableCell component="th" scope="row" align="center">
                   {fine.LOAN_ID}
                 </TableCell>
-                <TableCell align="right">{fine.FINE_AMT}</TableCell>
-                <TableCell align="right">{fine.PAID? "Paid" : "Not Paid"}</TableCell>
+                <TableCell align="center">{fine.FINE_AMT}</TableCell>
+                <TableCell align="center">{fine.PAID? "Paid" : "Not Paid"}</TableCell>
               </TableRow>
             ))}
           </TableBody>

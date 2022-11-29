@@ -1,8 +1,8 @@
-import { IconButton } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import NavBar from "./components/Navbar";
 import ViewFinesTable from "./components/ViewFinesTable";
-import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
+import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
 
 function ViewFines() {
   const [fines, setFines] = useState([]);
@@ -16,7 +16,7 @@ function ViewFines() {
     })
       .then((res) => res.json())
       .then((data) => setFines(data));
-  }
+  };
 
   useEffect(() => {
     getFines();
@@ -25,10 +25,18 @@ function ViewFines() {
   return (
     <div>
       <NavBar />
-      <div style={{display: "flex", justifyContent: "right", margin: "10px"}}>
+      <div style={{ display: "flex", justifyContent: "right", margin: "10px" }}>
         <IconButton onClick={getFines}>
-          <RefreshRoundedIcon fontSize="large"/>
+          <RefreshRoundedIcon fontSize="large" />
         </IconButton>
+      </div>
+      <div style={{display: "flex", justifyContent: "center"}}>
+      <Typography
+        variant="h2"
+        sx={{ fontWeight: "medium", marginBottom: 5, marginTop: 2 }}
+      >
+        View all fines
+      </Typography>
       </div>
       <div style={{ margin: "20px" }}>
         <ViewFinesTable fines={fines} />

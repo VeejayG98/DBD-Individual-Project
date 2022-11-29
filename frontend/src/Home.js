@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Grid, TextField } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import BasicTable from "./components/BasicTable";
 import NavBar from "./components/Navbar";
 import CheckoutModal from "./components/CheckoutModal";
@@ -42,6 +42,7 @@ function Home() {
 
   useEffect(() => {
     getBookSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   useEffect(() => {
@@ -68,9 +69,23 @@ function Home() {
   return (
     <div>
       <NavBar />
-      <Grid container alignContent="center" justifyContent="center" margin={2}>
+      <Grid
+        container
+        direction="column"
+        alignContent="center"
+        justifyContent="center"
+        margin={2}
+      >
+        <Grid item sx={{ mx: "auto" }}>
+          <Typography
+            variant="h2"
+            sx={{ fontWeight: "medium", marginBottom: 5, marginTop: 2 }}
+          >
+            Check out a book
+          </Typography>
+        </Grid>
         <Grid item>
-          <SearchBar placeholder="Search for Books" onChange={handleSearch}/>
+          <SearchBar placeholder="Search for Books" onChange={handleSearch} />
         </Grid>
       </Grid>
       <div style={{ margin: "20px" }}>

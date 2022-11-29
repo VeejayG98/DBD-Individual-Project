@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import NavBar from "./components/Navbar";
 import PayFinesTable from "./components/PayFinesTable";
@@ -23,6 +24,14 @@ function PayFines() {
   return (
     <div>
       <NavBar />
+      <div style={{display: "flex", justifyContent: "center"}}>
+      <Typography
+        variant="h2"
+        sx={{ fontWeight: "medium", marginBottom: 5, marginTop: 2 }}
+      >
+        Pay fines
+      </Typography>
+      </div>
       <div style={{ margin: "20px" }}>
         <PayFinesTable userFines={userFines} getUserFines={getUserFines} />
       </div>

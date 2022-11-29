@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import LoansTable from "./components/LoansTable";
-import { Grid, TextField } from "@mui/material";
+import { Grid, TextField, Typography } from "@mui/material";
 import NavBar from "./components/Navbar";
 import SearchBar from "./components/SearchBar";
 
@@ -51,9 +51,23 @@ function CheckIn() {
   return (
     <div>
       <NavBar />
-      <Grid container alignContent="center" justifyContent="center" margin={2}>
+      <Grid
+        container
+        direction="column"
+        alignContent="center"
+        justifyContent="center"
+        margin={2}
+      >
+        <Grid item sx={{ mx: "auto" }}>
+          <Typography
+            variant="h2"
+            sx={{ fontWeight: "medium", marginBottom: 5, marginTop: 2 }}
+          >
+            Check in a book
+          </Typography>
+        </Grid>
         <Grid item>
-          <SearchBar placeholder="Search Book Loans" onChange={handleSearch}/>
+          <SearchBar placeholder="Search Book Loans" onChange={handleSearch} />
         </Grid>
       </Grid>
       <div style={{ margin: "20px" }}>

@@ -11,7 +11,7 @@ import SimpleSnackbar from "./SimpleSnackbar";
 
 const LoansTable = ({ loans, getLoansSearch }) => {
   const [openSnackBar, setOpenSnackBar] = useState(false);
-  const checkinMessage = "Checkin Completed";
+  const checkinMessage = "Check in Completed";
 
   const handleCheckIn = async (event) => {
     console.log(event.target.id);
